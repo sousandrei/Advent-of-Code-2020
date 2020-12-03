@@ -1,32 +1,15 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use std::path::Path;
+use aoc_runner_derive::{aoc, aoc_generator};
 
-pub fn run() {
-    let lines = get_input();
-
-    println!("{}", p1(&lines));
-    println!("{}", p2(&lines));
+#[aoc_generator(day1)]
+pub fn get_input(input: &str) -> Vec<i32> {
+    input
+        .split('\n')
+        .map(|value| value.parse::<i32>().expect("Error parsing line"))
+        .collect()
 }
 
-pub fn get_input() -> Vec<i32> {
-    const FILENAME: &str = "data/day1.txt";
-    let file = File::open(Path::new(FILENAME)).expect("Error opening file");
-    let lines = BufReader::new(file).lines();
-
-    let lines: Vec<i32> = lines
-        .map(|value| {
-            value
-                .expect("Error getting line")
-                .parse::<i32>()
-                .expect("Error parsing line")
-        })
-        .collect();
-
-    return lines;
-}
-
-pub fn p1(lines: &Vec<i32>) -> i32 {
+#[aoc(day1, part1)]
+pub fn part1(lines: &Vec<i32>) -> i32 {
     let mut lines = lines.clone();
     lines.sort_unstable();
 
@@ -48,7 +31,8 @@ pub fn p1(lines: &Vec<i32>) -> i32 {
     return 0;
 }
 
-pub fn p2(lines: &Vec<i32>) -> i32 {
+#[aoc(day1, part2)]
+pub fn part2(lines: &Vec<i32>) -> i32 {
     let mut lines = lines.clone();
     lines.sort_unstable();
 
@@ -74,16 +58,16 @@ mod tests {
     }
 
     #[test]
-    fn p1_test() {
+    fn parte1_test() {
         let input = input();
 
-        assert_eq!(p1(&input), 1721 * 299);
+        assert_eq!(part1(&input), 1721 * 299);
     }
 
     #[test]
-    fn p2_test() {
+    fn part2_test() {
         let input = input();
 
-        assert_eq!(p2(&input), 979 * 366 * 675);
+        assert_eq!(part2(&input), 979 * 366 * 675);
     }
 }

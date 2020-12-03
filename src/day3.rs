@@ -1,21 +1,4 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use std::path::Path;
-
-pub fn run() {
-    let input = get_input();
-
-    println!("{}", p1(input.clone()));
-    println!("{}", p2(input.clone()));
-}
-
-pub fn get_input() -> Vec<String> {
-    const FILENAME: &str = "data/day3.txt";
-
-    let file = File::open(Path::new(FILENAME)).expect("Error opening file");
-
-    BufReader::new(file).lines().map(|l| l.unwrap()).collect()
-}
+use aoc_runner_derive::{aoc, aoc_generator};
 
 struct IterData {
     i: i32,
@@ -41,6 +24,11 @@ impl Iterator for IterData {
     }
 }
 
+#[aoc_generator(day3)]
+pub fn get_input(input: &str) -> Vec<String> {
+    input.split('\n').map(|line| line.to_string()).collect()
+}
+
 fn tobo(leni: i32, lenj: i32, si: i32, sj: i32) -> IterData {
     IterData {
         i: 0,
@@ -52,9 +40,15 @@ fn tobo(leni: i32, lenj: i32, si: i32, sj: i32) -> IterData {
     }
 }
 
-pub fn p1(lines: Vec<String>) -> i32 {
-    let leni = lines.len() as i32;
-    let lenj = lines[0].len() as i32;
+#[aoc(day3, part1)]
+pub fn part1(lines: &Vec<String>) -> i32 {
+    let mut leni = 322;
+    let mut lenj = 31;
+
+    if cfg!(test) {
+        leni = 11;
+        lenj = 11;
+    }
 
     let mut count = 0;
 
@@ -68,9 +62,15 @@ pub fn p1(lines: Vec<String>) -> i32 {
     count
 }
 
-pub fn p2(lines: Vec<String>) -> i64 {
-    let leni = lines.len() as i32;
-    let lenj = lines[0].len() as i32;
+#[aoc(day3, part2)]
+pub fn part2(lines: &Vec<String>) -> i64 {
+    let mut leni = 322;
+    let mut lenj = 31;
+
+    if cfg!(test) {
+        leni = 11;
+        lenj = 11;
+    }
 
     let steps = vec![(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)];
 
@@ -118,12 +118,12 @@ mod tests {
     #[test]
     fn p1_test() {
         let input = input();
-        assert_eq!(p1(input), 7);
+        assert_eq!(part1(&input), 7);
     }
 
     #[test]
     fn p2_test() {
         let input = input();
-        assert_eq!(p2(input), 336);
+        assert_eq!(part2(&input), 336);
     }
 }

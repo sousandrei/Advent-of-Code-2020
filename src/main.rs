@@ -1,5 +1,3 @@
-mod day3;
+use aoc_runner_derive::aoc_main;
 
-fn main() {
-    day3::run();
-}
+aoc_main! { lib = adventofcode }

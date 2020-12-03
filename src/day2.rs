@@ -1,26 +1,15 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use std::path::Path;
+use aoc_runner_derive::{aoc, aoc_generator};
 
-pub fn run() {
-    let input = get_input();
-    let lines = parse_lines(&input);
-
-    println!("{}", p1(lines.clone()));
-    println!("{}", p2(lines.clone()));
+pub struct Input {
+    min: usize,
+    max: usize,
+    c: char,
+    s: String,
 }
 
-pub fn get_input() -> Vec<String> {
-    const FILENAME: &str = "data/day2.txt";
-
-    let file = File::open(Path::new(FILENAME)).expect("Error opening file");
-
-    BufReader::new(file).lines().map(|l| l.unwrap()).collect()
-}
-
-pub fn parse_lines<'a>(lines: &'a Vec<String>) -> Vec<(usize, usize, char, &'a str)> {
-    lines
-        .iter()
+fn parse_input(input: &str) -> Vec<Input> {
+    input
+        .split('\n')
         .map(|line| {
             let v: Vec<&str> = line.split(": ").collect();
 
@@ -35,18 +24,29 @@ pub fn parse_lines<'a>(lines: &'a Vec<String>) -> Vec<(usize, usize, char, &'a s
 
             let s = v[1];
 
-            (min, max, c, s)
+            Input {
+                min,
+                max,
+                c,
+                s: s.to_string(),
+            }
         })
         .collect()
 }
 
-pub fn p1<'a>(lines: Vec<(usize, usize, char, &'a str)>) -> i32 {
+#[aoc_generator(day2)]
+pub fn get_input(input: &str) -> Vec<Input> {
+    parse_input(input)
+}
+
+#[aoc(day2, part1)]
+pub fn part1(lines: &Vec<Input>) -> i32 {
     let mut count = 0;
 
-    for (min, max, c, s) in lines {
-        let char_count = s.matches(c).count();
+    for Input { min, max, c, s } in lines {
+        let char_count = s.matches(*c).count();
 
-        if char_count >= min && char_count <= max {
+        if char_count >= *min && char_count <= *max {
             count += 1;
         }
     }
@@ -54,14 +54,15 @@ pub fn p1<'a>(lines: Vec<(usize, usize, char, &'a str)>) -> i32 {
     return count;
 }
 
-pub fn p2<'a>(lines: Vec<(usize, usize, char, &'a str)>) -> i32 {
+#[aoc(day2, part2)]
+pub fn part2(lines: &Vec<Input>) -> i32 {
     let mut count = 0;
 
-    for (p1, p2, c, s) in lines {
+    for Input { min, max, c, s } in lines {
         let mut cs = s.chars();
 
-        let um = cs.nth(p1 - 1).unwrap() == c;
-        let dos = cs.nth(p2 - p1 - 1).unwrap() == c;
+        let um = cs.nth(min - 1).unwrap() == *c;
+        let dos = cs.nth(max - min - 1).unwrap() == *c;
 
         count += ((um) ^ (dos)) as i32;
     }
@@ -73,27 +74,21 @@ pub fn p2<'a>(lines: Vec<(usize, usize, char, &'a str)>) -> i32 {
 mod tests {
     use super::*;
 
-    fn input() -> Vec<String> {
-        vec![
-            "1-3 a: abcde".to_string(),
-            "1-3 b: cdefg".to_string(),
-            "2-9 c: ccccccccc".to_string(),
-        ]
+    fn input() -> &'static str {
+        "1-3 a: abcde\n\
+1-3 b: cdefg\n\
+2-9 c: ccccccccc"
     }
 
     #[test]
-    fn p1_test() {
-        let input = input();
-        let input = parse_lines(&input);
-
-        assert_eq!(p1(input), 2);
+    fn part1_test() {
+        let input = parse_input(input());
+        assert_eq!(part1(&input), 2);
     }
 
     #[test]
-    fn p2_test() {
-        let input = input();
-        let input = parse_lines(&input);
-
-        assert_eq!(p2(input), 1);
+    fn parte2_test() {
+        let input = parse_input(input());
+        assert_eq!(part2(&input), 1);
     }
 }
