@@ -52,7 +52,6 @@ pub fn p2(lines: &Vec<i32>) -> i32 {
     let mut lines = lines.clone();
     lines.sort_unstable();
 
-    //OH wow, disgusting
     for line in &lines {
         for line2 in &lines {
             for line3 in &lines {
@@ -70,16 +69,20 @@ pub fn p2(lines: &Vec<i32>) -> i32 {
 mod tests {
     use super::*;
 
+    fn input() -> Vec<i32> {
+        vec![1721, 979, 366, 299, 675, 1456]
+    }
+
     #[test]
     fn p1_test() {
-        let input = vec![1721, 979, 366, 299, 675, 1456];
+        let input = input();
 
         assert_eq!(p1(&input), 1721 * 299);
     }
 
     #[test]
     fn p2_test() {
-        let input = vec![1721, 979, 366, 299, 675, 1456];
+        let input = input();
 
         assert_eq!(p2(&input), 979 * 366 * 675);
     }

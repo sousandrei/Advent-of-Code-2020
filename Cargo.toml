@@ -7,7 +7,8 @@ edition = "2018"
 
 [dependencies]
 criterion = "0.3.3"
+regex = "1.4.2"
 
 [[bench]]
-name = "day1"
+name = "bench"
 harness = false
