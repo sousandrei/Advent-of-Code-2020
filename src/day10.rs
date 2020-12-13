@@ -2,16 +2,18 @@ use aoc_runner_derive::{aoc, aoc_generator};
 
 #[aoc_generator(day10)]
 pub fn get_input(input: &str) -> Vec<i16> {
-    input
+    let mut vec = input
         .split("\n")
         .map(|line| line.parse::<i16>().unwrap())
-        .collect()
+        .collect::<Vec<i16>>();
+
+    vec.sort_unstable();
+
+    return vec;
 }
 
 #[aoc(day10, part1)]
 pub fn part1(code: &Vec<i16>) -> u16 {
-    let mut code = code.clone();
-    code.sort_unstable();
     let mut j1 = 0;
     let mut j3 = 1;
     let mut last = *code.first().unwrap();
@@ -23,7 +25,7 @@ pub fn part1(code: &Vec<i16>) -> u16 {
     }
 
     for adp in code {
-        if adp == last {
+        if *adp == last {
             continue;
         }
 
@@ -33,7 +35,7 @@ pub fn part1(code: &Vec<i16>) -> u16 {
             _ => unreachable!(),
         }
 
-        last = adp;
+        last = *adp;
     }
 
     return j1 * j3;
@@ -41,45 +43,42 @@ pub fn part1(code: &Vec<i16>) -> u16 {
 
 #[aoc(day10, part2)]
 pub fn part2(code: &Vec<i16>) -> i64 {
-    let mut code = code.clone();
-    code.sort_unstable();
-
-    let mut seq: Vec<i16> = Vec::new();
-
     let mut last = 0;
     let mut count = 0;
+    let mut g_count = 1;
     let mut inside_seq = true;
 
     for c in code {
-        if c == (last + 1) {
+        if *c == (last + 1) {
             inside_seq = true;
         }
 
         if inside_seq {
-            if c == (last + 1) {
+            if *c == (last + 1) {
                 count += 1;
             } else {
                 inside_seq = false;
-                seq.push(count);
+                g_count *= match count {
+                    4 => 7,
+                    3 => 4,
+                    _ => count,
+                };
                 count = 0;
             }
         }
 
-        last = c;
-    }
-    if inside_seq {
-        seq.push(count);
+        last = *c;
     }
 
-    seq.iter()
-        .map(|v| match v {
+    if inside_seq {
+        g_count *= match count {
             4 => 7,
             3 => 4,
-            _ => *v,
-        })
-        .collect::<Vec<i16>>()
-        .iter()
-        .fold(1, |acc, v| acc * (*v as i64))
+            _ => count,
+        };
+    }
+
+    return g_count;
 }
 
 #[cfg(test)]
