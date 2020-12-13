@@ -8,6 +8,7 @@ use aoc_runner_derive::aoc_lib;
 // pub mod day6;
 // pub mod day7;
 // pub mod day8;
-pub mod day9;
+// pub mod day9;
+pub mod day10;
 
 aoc_lib! { year = 2020 }
